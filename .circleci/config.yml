@@ -33,8 +33,9 @@ jobs:
   deploy:
     docker:
       # specify the version you desire here
-      - image: circleci/node:7.10
-      - image: circleci/python:3.6.1
+      #- image: circleci/node:7.10
+      #- image: circleci/python:3.6.1
+      - image: nodejs-python
 
     working_directory: ~/medilearn
 
