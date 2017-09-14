@@ -49,7 +49,7 @@ jobs:
           - v1-dependencies-
 
       - run: yarn install
-      - run: sudo pip install awscli
+      - run: pip install awscli
 
       - save_cache:
           paths:
@@ -63,7 +63,7 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - test
+      #- test
       - deploy:
           requires:
             - test
