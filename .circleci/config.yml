@@ -72,4 +72,4 @@ workflows:
           #  - test
           filters:
             branches:
-              only: only-master
+              only: other-master
