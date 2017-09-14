@@ -2,7 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.0
 jobs:
   test:
     docker:
@@ -17,9 +17,9 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
       - run: yarn install
 
@@ -31,33 +31,33 @@ jobs:
       #- run: yarn test
 
   deploy:
-      docker:
-        # specify the version you desire here
-        - image: circleci/node:7.10
-        - image: mesosphere/aws-cli
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:7.10
+      - image: mesosphere/aws-cli
 
-      working_directory: ~/medilearn
+    working_directory: ~/medilearn
 
-      steps:
-        - checkout
+    steps:
+      - checkout
 
-        # Download and cache dependencies
-        - restore_cache:
-            keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
-        - run: yarn install
-        - run: sudo pip install awscli
+      - run: yarn install
+      - run: sudo pip install awscli
 
-        - save_cache:
-            paths:
-              - node_modules
-            key: v1-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
-        - run: yarn run build
-        - run: aws s3 sync ~/medilearn s3://tramparamparam --delete
+      - run: yarn run build
+      - run: aws s3 sync ~/medilearn s3://tramparamparam --delete
 
 workflows:
   version: 2
@@ -65,8 +65,8 @@ workflows:
     jobs:
       - test
       - deploy:
-        requires:
-          - test
-        filters:
-          branches:
-            only: master
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
