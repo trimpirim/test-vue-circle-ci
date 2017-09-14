@@ -35,7 +35,7 @@ jobs:
       # specify the version you desire here
       #- image: circleci/node:7.10
       #- image: circleci/python:3.6.1
-      - image: beevelop/nodejs-python
+      - image: nikolaik/python-nodejs
 
     working_directory: ~/medilearn
 
@@ -53,11 +53,6 @@ jobs:
       - run:
           command: |
             pip install awscli
-
-      - run:
-          command: |
-            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
       - save_cache:
           paths:
