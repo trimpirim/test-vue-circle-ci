@@ -60,7 +60,8 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run: yarn run build
-      - run: aws s3 sync ~/medilearn/dist s3://tramparamparam --delete
+      - run: echo '$AWS_S3_BUCKET_NAME'
+      # - run: aws s3 sync ~/medilearn/dist s3://AWS_S3_BUCKET_NAME --delete
 
 workflows:
   version: 2
