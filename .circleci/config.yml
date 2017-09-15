@@ -1,13 +1,9 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2.0
 jobs:
   test:
     docker:
       # specify the version you desire here
-      - image: beevelop/nodejs-python
+      - image: nikolaik/python-nodejs
 
     working_directory: ~/medilearn
 
@@ -28,13 +24,11 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      #- run: yarn test
+      #- run: yarn run test
 
   deploy:
     docker:
       # specify the version you desire here
-      #- image: circleci/node:7.10
-      #- image: circleci/python:3.6.1
       - image: nikolaik/python-nodejs
 
     working_directory: ~/medilearn
@@ -43,34 +37,39 @@ jobs:
       - checkout
 
       # Download and cache dependencies
-      #- restore_cache:
-      #    keys:
-      #    - v1-dependencies-{{ checksum "package.json" }}
-      #    # fallback to using the latest cache if no exact match is found
-      #    - v1-dependencies-
+      - restore_cache:
+         keys:
+         - v1-dependencies-{{ checksum "package.json" }}
+         # fallback to using the latest cache if no exact match is found
+         - v1-dependencies-
 
-      #- run: yarn install
-      #- run:
-      #    command: |
-      #      pip install awscli
+      - run: yarn install
+      # install AWSCLI to upload to s3 bucket
+      - run:
+         command: |
+           pip install awscli
 
-      #- save_cache:
-      #    paths:
-      #      - node_modules
-      #    key: v1-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+         paths:
+           - node_modules
+         key: v1-dependencies-{{ checksum "package.json" }}
 
-      #- run: yarn run build
-      - run: echo $AWS_S3_BUCKET_NAME
-      # - run: aws s3 sync ~/medilearn/dist s3://AWS_S3_BUCKET_NAME --delete
+      - run: yarn run build
+      # - run: aws s3 sync ~/medilearn/dist s3://$AWS_S3_BUCKET_NAME --delete
 
 workflows:
   version: 2
-  build_and_deploy:
+  test_build_and_deploy:
     jobs:
-      #- test
+      - test:
+          filters:
+            branches:
+              only:
+                - other-master
+                - dev
       - deploy:
-          #requires:
-          #  - test
+          requires:
+           - test
           filters:
             branches:
               only: other-master
